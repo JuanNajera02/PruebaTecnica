@@ -18,6 +18,10 @@ namespace Data
         private IDbContextTransaction? _currentTransaction;
 
         private GenericRepository<Client>? clientRepository;
+        private GenericRepository<Store>? storeRepository;
+        private GenericRepository<Items>? itemsRepository;
+        private GenericRepository<ItemStoreRelation>? itemStoreRelationRepository;
+        private GenericRepository<ClientItemRelation>? clientItemRelationRepository;
 
         public UnitOfWork(Context context)
         {
@@ -104,6 +108,53 @@ namespace Data
                     clientRepository = new GenericRepository<Client>(dbcontext);
                 }
                 return clientRepository;
+            }
+        }
+        public GenericRepository<Store> StoreRepository
+        {
+            get
+            {
+                if (storeRepository == null)
+                {
+                    storeRepository = new GenericRepository<Store>(dbcontext);
+                }
+                return storeRepository;
+            }
+        }
+
+        public GenericRepository<Items> ItemsRepository
+        {
+            get
+            {
+                if (itemsRepository == null)
+                {
+                    itemsRepository = new GenericRepository<Items>(dbcontext);
+                }
+                return itemsRepository;
+            }
+        }
+
+        public GenericRepository<ItemStoreRelation> ItemStoreRelationRepository
+        {
+            get
+            {
+                if (itemStoreRelationRepository == null)
+                {
+                    itemStoreRelationRepository = new GenericRepository<ItemStoreRelation>(dbcontext);
+                }
+                return itemStoreRelationRepository;
+            }
+        }
+
+        public GenericRepository<ClientItemRelation> ClientItemRelationRepository
+        {
+            get
+            {
+                if (clientItemRelationRepository == null)
+                {
+                    clientItemRelationRepository = new GenericRepository<ClientItemRelation>(dbcontext);
+                }
+                return clientItemRelationRepository;
             }
         }
 

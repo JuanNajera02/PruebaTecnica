@@ -25,7 +25,10 @@ namespace webTESTAPP
         public static void ConfigureBusiness(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ClientBusiness>();
-
+            builder.Services.AddScoped<StoreBusiness>();
+            builder.Services.AddScoped<ItemsBusiness>();
+            builder.Services.AddScoped<ItemStoreRelationBusiness>();
+            builder.Services.AddScoped<ClientItemRelationBusiness>();
         }
 
         internal static void ConfigureCompression(ResponseCompressionOptions options)

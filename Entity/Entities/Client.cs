@@ -16,5 +16,8 @@ namespace Entity.Entities
         public string? LastName { get; set; }
 
         public string? Address { get; set; }
+
+
+        public ICollection<ClientItemRelation>? ClientItemRelations { get; set; }
     }
 }
