@@ -23,5 +23,42 @@ namespace webTESTAPP.Controllers
 
             return Ok(response);
         }
+
+        //update
+        [HttpPost, Route("UpdateStore")]
+        public async Task<IActionResult> UpdateRoute(UpdateStoreDTO updateStoreDTO)
+        {
+            var response = await _storeBusiness.Update(updateStoreDTO);
+
+            return Ok(response);
+        }
+
+        //delete
+        [HttpPost, Route("DeleteStore")]
+        public async Task<IActionResult> DeleteRoute(int id)
+        {
+            await _storeBusiness.Delete(id);
+
+            return Ok();
+        }
+
+        //get all
+        [HttpGet, Route("GetAllStores")]
+        public async Task<IActionResult> GetAllRoute()
+        {
+            var response = await _storeBusiness.GetAll();
+
+            return Ok(response);
+        }
+
+        //get by id
+        [HttpGet, Route("GetStoreById")]
+        public async Task<IActionResult> GetByIdRoute(int id)
+        {
+            var response = await _storeBusiness.GetById(id);
+
+            return Ok(response);
+        }
+
     }
 }

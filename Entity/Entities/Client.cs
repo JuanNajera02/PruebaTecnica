@@ -17,6 +17,10 @@ namespace Entity.Entities
 
         public string? Address { get; set; }
 
+        public string? Email { get; set; }  
+
+        public string? Password { get; set; }
+
 
         public ICollection<ClientItemRelation>? ClientItemRelations { get; set; }
     }

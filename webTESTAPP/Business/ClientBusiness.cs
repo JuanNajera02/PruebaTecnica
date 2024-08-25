@@ -20,13 +20,79 @@ namespace webTESTAPP.Business
             {
                 Name = addARequest.Name,
                 LastName = addARequest.LastName,
-                Address = addARequest.Address
+                Address = addARequest.Address,
+                Email = addARequest.Email,
+                Password = addARequest.Password
             };
 
             uow.ClientRepository.Insert(client);
             await uow.SaveAsync();
 
             return client;
+
+        }
+
+        //update
+        public async Task<Client> Update(UpdateClientDTO updateRequest)
+        {
+            Client? client = await uow.ClientRepository.Get(x => x.Id == updateRequest.Id).FirstOrDefaultAsync();
+            if (client == null)
+            {
+                throw new ArgumentException(message: "MSG_Usuario invalido");
+            }
+
+            client.Name = updateRequest.Name;
+            client.LastName = updateRequest.LastName;
+            client.Address = updateRequest.Address;
+            client.Email = updateRequest.Email;
+            client.Password = updateRequest.Password;
+
+            uow.ClientRepository.Update(client);
+            await uow.SaveAsync();
+
+            return client;
+        }
+
+        //delete
+        public async Task Delete(int id)
+        {
+            Client? client = await uow.ClientRepository.Get(x => x.Id == id).FirstOrDefaultAsync();
+            if (client == null)
+            {
+                throw new ArgumentException(message: "MSG_Usuario invalido");
+            }
+
+            uow.ClientRepository.Delete(client);
+            await uow.SaveAsync();
+        }
+
+        //get all
+        public async Task<Client[]> GetAll()
+        {
+            return await uow.ClientRepository.Get().ToArrayAsync();
+        }
+
+        //get by id
+        public async Task<Client> GetById(int id)
+        {
+            Client? client = await uow.ClientRepository.Get(x => x.Id == id).FirstOrDefaultAsync();
+            if (client == null)
+            {
+                throw new ArgumentException(message: "MSG_Usuario invalido");
+            }
+            return client;
+        }
+
+        //login
+        public async Task<Client> Login(string email, string password)
+        {
+            Client? client = await uow.ClientRepository.Get(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
+            if (client == null)
+            {
+                throw new ArgumentException(message: "MSG_Usuario invalido");
+            }
+            return client;
+
 
         }
     }
