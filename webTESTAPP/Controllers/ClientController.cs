@@ -62,9 +62,9 @@ namespace webTESTAPP.Controllers
         }
 
         [HttpPost, Route("Login")]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var response = await _clientBusiness.Login(email, password);
+            var response = await _clientBusiness.Login(request);
 
             return Ok(response);
         }

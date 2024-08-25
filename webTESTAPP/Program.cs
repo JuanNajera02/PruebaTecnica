@@ -24,20 +24,28 @@ builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>
         policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
 );
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policyBuilder => policyBuilder
+            .WithOrigins("http://localhost:4200") // Permite solicitudes desde este origen
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 // Agrega los servicios de Swagger
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors("AllowSpecificOrigin");
 
 app.UseResponseCompression();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-    c.RoutePrefix = string.Empty; // Esto hará que Swagger UI esté en la raíz de tu aplicación
+    c.RoutePrefix = string.Empty; 
 });
 
 

@@ -26,16 +26,15 @@ namespace webTESTAPP.Controllers
         }
 
         //update
-        [HttpPost, Route("UpdateItem")]
-        public async Task<IActionResult> UpdateRoute(UpdateItemDTO updateItemDTO)
+        [HttpPut("UpdateItem")]
+        public async Task<IActionResult> UpdateRoute([FromBody] UpdateItemDTO updateItemDTO)
         {
             var response = await _itemsBusiness.Update(updateItemDTO);
-
             return Ok(response);
         }
 
         //delete
-        [HttpPost, Route("DeleteItem")]
+        [HttpDelete("DeleteItem/{id}")]
         public async Task<IActionResult> DeleteRoute(int id)
         {
             await _itemsBusiness.Delete(id);

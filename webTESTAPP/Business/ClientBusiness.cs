@@ -84,9 +84,9 @@ namespace webTESTAPP.Business
         }
 
         //login
-        public async Task<Client> Login(string email, string password)
+        public async Task<Client> Login(LoginRequest loginRequest)
         {
-            Client? client = await uow.ClientRepository.Get(x => x.Email == email && x.Password == password).FirstOrDefaultAsync();
+            Client? client = await uow.ClientRepository.Get(x => x.Email == loginRequest.Email && x.Password == loginRequest.Password).FirstOrDefaultAsync();
             if (client == null)
             {
                 throw new ArgumentException(message: "MSG_Usuario invalido");
