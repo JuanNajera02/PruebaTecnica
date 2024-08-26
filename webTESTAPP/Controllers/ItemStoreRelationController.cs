@@ -62,6 +62,25 @@ namespace webTESTAPP.Controllers
             return Ok(response);
         }
 
+        //add a list of items to a store
+        [HttpPost, Route("AddItemsToStore")]
+        public async Task<IActionResult> AddItemsToStoreRoute(AddItemsToStoreDTO addItemsToStoreDTO)
+        {
+            var response = await _itemStoreRelationBusiness.AddItemsToStore(addItemsToStoreDTO);
+
+            return Ok(response);
+        }
+
+        //update items, delete the ones that are related to the store and add the new ones
+        [HttpPut, Route("UpdateItemsToStore")]
+        public async Task<IActionResult> UpdateItemsToStoreRoute([FromBody] AddItemsToStoreDTO addItemsToStoreDTO)
+        {
+            var response = await _itemStoreRelationBusiness.UpdateItemsToStore(addItemsToStoreDTO);
+
+            return Ok(response);
+        }
+
+
 
 
     }

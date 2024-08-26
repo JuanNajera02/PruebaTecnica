@@ -78,6 +78,40 @@ namespace webTESTAPP.Business
             return await uow.ItemStoreRelationRepository.Get(x => x.StoreId == id).ToArrayAsync();
         }
 
+        // add a list of items to a store
+        public async Task<ItemStoreRelation[]> AddItemsToStore(AddItemsToStoreDTO addItemsToStoreDTO)
+        {
+            var itemStoreRelations = new List<ItemStoreRelation>();
+            foreach (var item in addItemsToStoreDTO.Items)
+            {
+                var itemStoreRelation = new ItemStoreRelation
+                {
+                    ItemId = item,
+                    StoreId = addItemsToStoreDTO.StoreId,
+                };
+                itemStoreRelations.Add(itemStoreRelation);
+                uow.ItemStoreRelationRepository.Insert(itemStoreRelation);
+            }
+
+            await uow.SaveAsync();
+
+            return itemStoreRelations.ToArray();
+        }   
+
+        //update items, delete the ones that are related to the store and add the new ones
+        public async Task<ItemStoreRelation[]> UpdateItemsToStore(AddItemsToStoreDTO addItemsToStoreDTO)
+        {
+            var itemStoreRelations = await uow.ItemStoreRelationRepository.Get(x => x.StoreId == addItemsToStoreDTO.StoreId).ToArrayAsync();
+            foreach (var itemStoreRelation in itemStoreRelations)
+            {
+                uow.ItemStoreRelationRepository.Delete(itemStoreRelation);
+            }
+
+            await uow.SaveAsync();
+
+            return await AddItemsToStore(addItemsToStoreDTO);
+        }
+
 
 
     }
