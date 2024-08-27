@@ -29,24 +29,57 @@ namespace webTESTAPP.Business
 
         }
 
-        //add a list of items to a client
         public async Task<ClientItemRelation[]> AddList(AddItemsToClient addARequest)
         {
-                
-            foreach (var item in addARequest.Items)
+            // Obtener todos los ítems en la solicitud en una sola consulta.
+            var itemIds = addARequest.Items.Distinct().ToList(); // Para evitar consultas redundantes
+
+            // Recuperar todos los ítems necesarios de la base de datos.
+            var items = await uow.ItemsRepository.Get(i => itemIds.Contains(i.ItemId)).ToListAsync();
+
+            // Crear un diccionario para el stock de los ítems.
+            var itemStock = items.ToDictionary(i => i.ItemId, i => i);
+
+            // Lista para las relaciones de cliente e ítem.
+            var clientItemRelations = new List<ClientItemRelation>();
+
+            // Iterar sobre cada ID de ítem en la solicitud.
+            foreach (var itemId in addARequest.Items)
             {
+                if (!itemStock.TryGetValue(itemId, out var item) || item.Stock <= 0)
+                {
+                    throw new InvalidOperationException($"Item with ID {itemId} not found or out of stock.");
+                }
+
+                // Disminuir el stock en 1.
+                item.Stock -= 1;
+
+                // Crear la relación entre cliente y el ítem.
                 var clientItemRelation = new ClientItemRelation
                 {
                     ClientId = addARequest.ClientId,
-                    ItemId = item,
+                    ItemId = itemId,
                 };
 
-                uow.ClientItemRelationRepository.Insert(clientItemRelation);
+                clientItemRelations.Add(clientItemRelation);
+
+                // Marcar el ítem para actualización.
+                uow.ItemsRepository.Update(item);
             }
+
+            // Insertar todas las relaciones de cliente e ítem.
+            foreach (var relation in clientItemRelations)
+            {
+                uow.ClientItemRelationRepository.Insert(relation);
+            }
+
+            // Guardar todos los cambios en la base de datos.
             await uow.SaveAsync();
 
-            return await uow.ClientItemRelationRepository.Get(x => x.ClientId == addARequest.ClientId).ToArrayAsync();
-
+            // Devolver todas las relaciones de cliente e ítem para el cliente especificado.
+            return await uow.ClientItemRelationRepository
+                .Get(x => x.ClientId == addARequest.ClientId)
+                .ToArrayAsync();
         }
 
         //update
@@ -96,7 +129,7 @@ namespace webTESTAPP.Business
         //get by client id
         public async Task<ClientItemRelation[]> GetByClientId(int id)
         {
-            return await uow.ClientItemRelationRepository.Get(x => x.ClientId == id).ToArrayAsync();
+            return await uow.ClientItemRelationRepository.Get(x => x.ClientId == id).Include(x => x.Item).ToArrayAsync();
         }
 
 
