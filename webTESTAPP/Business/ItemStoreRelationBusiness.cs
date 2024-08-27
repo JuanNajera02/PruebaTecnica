@@ -75,7 +75,10 @@ namespace webTESTAPP.Business
         //get by store
         public async Task<ItemStoreRelation[]> GetByStore(int id)
         {
-            return await uow.ItemStoreRelationRepository.Get(x => x.StoreId == id).ToArrayAsync();
+            //include items
+            var itemStoreRelations = await uow.ItemStoreRelationRepository.Get(x => x.StoreId == id).Include(x => x.Item).ToArrayAsync();
+            return itemStoreRelations;
+   
         }
 
         // add a list of items to a store

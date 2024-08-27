@@ -24,6 +24,16 @@ namespace webTESTAPP.Controllers
             return Ok(response);
         }
 
+        //add a list of items to a client
+        [HttpPost, Route("AddItemsToClient")]
+        public async Task<IActionResult> AddItemsToClientRoute(AddItemsToClient addItemsToClient)
+        {
+            var response = await _clientItemRelationBusiness.AddList(addItemsToClient);
+
+            return Ok(response);
+        }
+
+
         //update
         [HttpPost, Route("UpdateClientItemRelation")]
         public async Task<IActionResult> UpdateRoute(UpdateClientItemRelationDTO updateClientItemRelationDTO)

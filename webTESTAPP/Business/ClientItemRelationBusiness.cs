@@ -29,6 +29,26 @@ namespace webTESTAPP.Business
 
         }
 
+        //add a list of items to a client
+        public async Task<ClientItemRelation[]> AddList(AddItemsToClient addARequest)
+        {
+                
+            foreach (var item in addARequest.Items)
+            {
+                var clientItemRelation = new ClientItemRelation
+                {
+                    ClientId = addARequest.ClientId,
+                    ItemId = item,
+                };
+
+                uow.ClientItemRelationRepository.Insert(clientItemRelation);
+            }
+            await uow.SaveAsync();
+
+            return await uow.ClientItemRelationRepository.Get(x => x.ClientId == addARequest.ClientId).ToArrayAsync();
+
+        }
+
         //update
         public async Task<ClientItemRelation> Update(UpdateClientItemRelationDTO updateRequest)
         {
